@@ -1,0 +1,14 @@
+{
+  "name": "Práctica 8 · DTE y máquina de estados",
+  "image": "mcr.microsoft.com/devcontainers/python:3.12",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-python.python",
+        "hediet.vscode-drawio",
+        "bierner.markdown-mermaid"
+      ]
+    }
+  },
+  "postAttachCommand": "echo 'Listo. Empiecen con: python simulador.py'"
+}
