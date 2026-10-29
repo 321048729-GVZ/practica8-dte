@@ -29,7 +29,7 @@ ESTADOS = {
     "registrado",
     "pagado",
     "en_preparacion",
-    "en_espera",
+    # CORREGIDO: Se eliminó el estado 'en_espera' y su transición inalcanzable.
     "listo",
     "entregado",
     "cancelado",
@@ -44,15 +44,16 @@ TRANSICIONES = {
     ("registrado", "cancelar"): "cancelado",
     ("pagado", "preparar"): "en_preparacion",
     ("en_preparacion", "terminar"): "listo",
-    ("en_espera", "llega_insumo"): "en_preparacion",
-    ("listo", "entregar"): "entregdo",
-    ("cancelado", "reactivar"): "registrado",
+    # CORREGIDO: Se eliminó el estado 'en_espera' y su transición inalcanzable.
+    # CORREGIDO: Se corrigió el nombre del estado 'entregdo' a 'entregado'.
+    ("listo", "entregar"): "entregado",
+    # CORREGIDO: Se eliminó la transición 'reactivar' porque 'cancelado' es un estado final y no debe tener salidas.
 }
 
 CAMINO_FELIZ = ["pagar", "preparar", "terminar", "entregar"]
 
 CASOS_INVALIDOS = [
     ("pagado", "cancelar"),      # ya pagado no se cancela
-    ("registrado", "cancelar"),  # sin pagar no se puede cancelar
+    # CORREGIDO: Se eliminó ("registrado", "cancelar") de CASOS_INVALIDOS porque el dueño indicó que un pedido sí se puede cancelar antes de pagar.
     ("listo", "preparar"),       # un pedido listo no vuelve a cocina
 ]

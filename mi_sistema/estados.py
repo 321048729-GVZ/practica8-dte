@@ -15,45 +15,54 @@ y jueguen con su diagrama:
     python simulador.py mi_sistema/estados.py
 """
 
-# 1. ¿Qué entidad de su E-R van a modelar?
-NOMBRE_ENTIDAD = ""
+"""
+SU SISTEMA · Diagrama de transición de estados
+Entidad: Producto
+"""
 
-# 2. Sus estados (de 4 a 7). Sustantivos o participios, en minúsculas,
-#    con guion bajo en lugar de espacios. Deben coincidir con los valores
-#    del campo `estado` en docs/datos.md.
+# 1. Nombre de la entidad de su E-R
+NOMBRE_ENTIDAD = "Producto"
+
+# 2. Sus estados (de 4 a 7), coinciden con docs/datos.md
 ESTADOS = {
-    # "pendiente",
-    # "en_revision",
+    "registrado",
+    "disponible",
+    "agotado",
+    "descontinuado",
+    "baja",
 }
 
-# 3. ¿En qué estado nace la entidad?
-ESTADO_INICIAL = ""
+# 3. Estado en el que nace la entidad
+ESTADO_INICIAL = "registrado"
 
-# 4. ¿En qué estado o estados termina su ciclo de vida?
-ESTADOS_FINALES = {
-    # "cerrado",
-}
+# 4. Estados donde termina su ciclo de vida
+ESTADOS_FINALES = {"descontinuado", "baja"}
 
-# 5. Las flechas de su DTE, una por línea:
-#        ("estado_origen", "evento"): "estado_destino",
+# 5. Las flechas de su DTE: ("estado_origen", "evento"): "estado_destino"
 TRANSICIONES = {
-    # ("pendiente", "asignar"): "en_revision",
+    ("registrado", "ingresar_stock"): "disponible",
+    ("registrado", "dar_de_baja"): "baja",
+    ("disponible", "vender_todo"): "agotado",
+    ("disponible", "descontinuar"): "descontinuado",
+    ("agotado", "reabastecer"): "disponible",
+    ("agotado", "descontinuar"): "descontinuado",
 }
 
-# 6. Opcional: la acción que ejecuta el sistema en cada flecha
-#    (la parte derecha de «evento / acción» en su DTE).
+# 6. Acción que ejecuta el sistema en cada flecha
 ACCIONES = {
-    # ("pendiente", "asignar"): "notificar al técnico",
+    ("registrado", "ingresar_stock"): "activar producto",
+    ("registrado", "dar_de_baja"): "remover registro",
+    ("disponible", "vender_todo"): "marcar sin stock",
+    ("disponible", "descontinuar"): "retirar de catálogo",
+    ("agotado", "reabastecer"): "actualizar existencias",
+    ("agotado", "descontinuar"): "retirar de catálogo",
 }
 
-# 7. Escenarios de prueba.
-#    El caso normal que les describió su usuario, como lista de eventos:
-CAMINO_FELIZ = [
-    # "asignar", "resolver", "cerrar",
-]
+# 7. Escenarios de prueba
+CAMINO_FELIZ = ["ingresar_stock", "vender_todo", "descontinuar"]
 
-#    Al menos 2 cosas que alguien va a intentar y que su sistema debe rechazar.
-#    Escriban junto a cada una, en un comentario, por qué es inválida.
 CASOS_INVALIDOS = [
-    # ("pendiente", "cerrar"),  # no se cierra un reporte que nadie atendió
+    ("registrado", "vender_todo"),      # Sin stock inicial no se puede vender
+    ("descontinuado", "reabastecer"),   # Un producto descontinuado ya no se reabastece
+    ("agotado", "vender_todo"),         # Agotado no tiene existencias para vender
 ]
